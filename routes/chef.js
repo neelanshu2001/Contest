@@ -36,6 +36,7 @@ router.get('/', async (req, res) => {
 
       predata.data.result.map((postdata, i) => {
         if (postdata.phase !== 'FINISHED' && i <= 8) {
+          contestid = postdata.id;
           data.push({
             id: uuid(),
             platform: 'CodeForces',
@@ -51,7 +52,7 @@ router.get('/', async (req, res) => {
             )
               .toUTCString()
               .slice(5, -4),
-            link: null,
+            link: `https://codeforces.com/contests/${contestid}`,
           });
         }
       });

@@ -1,0 +1,6 @@
+{
+  "mongoURI": "mongodb+srv://contest123:contest123@cluster0.kxupv.mongodb.net/contest?retryWrites=true&w=majority",
+  "jwtSecret": "secret",
+  "chef_url": "https://www.codechef.com/contests/?itm_medium=navmenu&itm_campaign=allcontests#future-contests",
+  "forces_url": "https://codeforces.com/api/contest.list?gym=false"
+}

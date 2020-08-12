@@ -15,9 +15,13 @@ export default (state, action) => {
         ...state,
         todayContest: action.payload.filter((contest) => {
           if (
-            contest.date.slice(0, -8) === new Date().toUTCString().slice(5, -12)
-          )
+            contest.date.slice(0, -8) ===
+            new Date(new Date().toUTCString().slice(0, -4) + '-0530')
+              .toUTCString()
+              .slice(0, -12)
+          ) {
             return contest;
+          }
         }),
 
         loading: false,

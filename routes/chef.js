@@ -21,13 +21,14 @@ router.get('/', async (req, res) => {
       .each((i, el) => {
         tds = $(el).find('td');
         prelink = $(tds).find('a').attr('href');
+        start = new Date($(tds[2]).text());
         data.push({
           id: uuid(),
           platform: 'Codechef',
           title: $(tds[1]).text().replace(/\s\s+/g, ''),
-          date: $(tds[2]).text(), //Ist format
-          start: new Date($(tds[2]).text()), //Gmt format
-          end: $(tds[3]).text(),
+          date: start.toUTCString().slice(0, -4), //Ist format
+          start, //Gmt format
+          end: new Date($(tds[3]).text()).toUTCString().slice(0, -4),
           link: `https://www.codechef.com${prelink}`,
         });
       });
@@ -44,14 +45,14 @@ router.get('/', async (req, res) => {
 
             date: new Date((postdata.startTimeSeconds + 19800) * 1000)
               .toUTCString()
-              .slice(5, -4), //IST format
+              .slice(0, -4), //IST format
             start: new Date(postdata.startTimeSeconds * 1000), //GMT Format
             end: new Date(
               (postdata.durationSeconds + 19800 + postdata.startTimeSeconds) *
                 1000
             )
               .toUTCString()
-              .slice(5, -4),
+              .slice(0, -4),
             link: `https://codeforces.com/contests/${contestid}`,
           });
         }
@@ -89,11 +90,11 @@ router.get('/', async (req, res) => {
             id: uuid(),
             platform: 'Atcoder',
             title: $(tds[1]).find('a').text(),
-            date: start.toUTCString().slice(5, -4),
+            date: start.toUTCString().slice(0, -4),
             start,
             end: new Date($(tds[0]).text().slice(0, -4) + time)
               .toUTCString()
-              .slice(5, -4),
+              .slice(0, -4),
 
             link: `https://atcoder.jp${prelink}`,
           });

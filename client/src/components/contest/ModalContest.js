@@ -16,7 +16,7 @@ const ModalContest = ({ contest }) => {
         <div className='text-sm mt-4'>
           {link !== null ? (
             <a href={link} className='btn btn-small blue'>
-              <i class='small material-icons'>chevron_right</i>
+              <i className='small material-icons'>chevron_right</i>
             </a>
           ) : (
             <a href={link} className='btn btn-small disabled'>

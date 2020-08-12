@@ -49,13 +49,21 @@ const Home = () => {
         <div>
           <Searchbar />
           <div className=' grid grid-cols-1 gap-4 mt-10'>
-            {filtered !== null
-              ? filtered.map((contestItem) => (
+            {filtered !== null ? (
+              filtered.length === 0 ? (
+                <div className='container text-center text-4xl font-bold'>
+                  No contest found
+                </div>
+              ) : (
+                filtered.map((contestItem) => (
                   <Contest contest={contestItem} key={contestItem.id} />
                 ))
-              : contest.map((contestItem) => (
-                  <Contest contest={contestItem} key={contestItem.id} />
-                ))}
+              )
+            ) : (
+              contest.map((contestItem) => (
+                <Contest contest={contestItem} key={contestItem.id} />
+              ))
+            )}
           </div>
         </div>
       ) : (

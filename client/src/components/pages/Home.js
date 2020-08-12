@@ -27,6 +27,15 @@ const Home = () => {
       <div className='text-center text-5xl font-mono font-bold mb-12'>
         Upcoming Contests
       </div>
+      <div className='fixed-action-btn'>
+        <a
+          className=' btn-large waves-effect waves-light btn btn-floating  red accent-3 modal-trigger'
+          href='#today'
+        >
+          <i class='material-icons white-text'> event</i>
+        </a>
+      </div>
+
       {!loading && contest !== null ? (
         <div className=' grid grid-cols-1 gap-4 mt-10'>
           {contest.map((contestItem) => (

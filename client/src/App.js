@@ -25,10 +25,11 @@ const App = () => {
               Contests for life
             </div>
             <Navbar />
+            <Today />
             <Switch>
               <Route exact path='/' component={Home} />
               <Route exact path='/about' component={About} />
-              <Route exact path='/today' component={Today} />
+
               <Route exact path='/login' component={Login} />
               <Route exact path='/register' component={Register} />
             </Switch>

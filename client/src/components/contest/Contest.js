@@ -1,7 +1,7 @@
 import React from 'react';
 import chef from '../../assets/images/chef.jfif';
 import forces from '../../assets/images/forces.jfif';
-
+import coder from '../../assets/images/coder.png';
 const Contest = ({ contest }) => {
   const { title, date, end, link, platform } = contest;
   return (
@@ -9,7 +9,13 @@ const Contest = ({ contest }) => {
       <div className='mr-12 mb-4'>
         <img
           className='object-scale-down '
-          src={platform === 'Codechef' ? chef : forces}
+          src={
+            platform === 'Codechef'
+              ? chef
+              : platform === 'CodeForces'
+              ? forces
+              : coder
+          }
           alt='Logo'
         />
       </div>

@@ -10,8 +10,8 @@ const { v4: uuid } = require('uuid');
 
 router.get('/', async (req, res) => {
   try {
-    const html = await axios.get(config.get('chef_url'));
-    const $ = await cheerio.load(html.data);
+    let html = await axios.get(config.get('chef_url'));
+    let $ = await cheerio.load(html.data);
     let data = [];
 
     $('h3[id="future-contests"]')
@@ -36,6 +36,7 @@ router.get('/', async (req, res) => {
 
       predata.data.result.map((postdata, i) => {
         if (postdata.phase !== 'FINISHED' && i <= 8) {
+          contestid = postdata.id;
           data.push({
             id: uuid(),
             platform: 'CodeForces',
@@ -51,10 +52,52 @@ router.get('/', async (req, res) => {
             )
               .toUTCString()
               .slice(5, -4),
-            link: null,
+            link: `https://codeforces.com/contests/${contestid}`,
           });
         }
       });
+    } catch (err) {
+      return res.status(500).send('Server Error');
+    }
+    try {
+      html = await axios.get('https://atcoder.jp/contests/');
+      $ = cheerio.load(html.data);
+      $('#contest-table-upcoming')
+        .find('tbody')
+        .find('tr')
+        .each((i, el) => {
+          tds = $(el).find('td');
+          prelink = $(tds[1]).find('a').attr('href');
+          start = new Date($(tds[0]).text().slice(0, -4) + '0330');
+
+          //have to check what happens if hr is in negative
+          hr = 3 - parseInt($(tds[2]).text().slice(0, 2));
+          min = 30 - parseInt($(tds[2]).text().slice(3, 5));
+          if (min <= 0) {
+            hr = hr - 1;
+            min = min + 60;
+          }
+          hr = hr.toString();
+          minute = min.toString();
+
+          time = '0' + hr + '0' + minute;
+          if (min >= 10) {
+            time = '0' + hr + minute;
+          }
+
+          data.push({
+            id: uuid(),
+            platform: 'Atcoder',
+            title: $(tds[1]).find('a').text(),
+            date: start.toUTCString().slice(0, -4),
+            start,
+            end: new Date($(tds[0]).text().slice(0, -4) + time)
+              .toUTCString()
+              .slice(0, -4),
+
+            link: `https://atcoder.jp${prelink}`,
+          });
+        });
     } catch (err) {
       return res.status(500).send('Server Error');
     }
@@ -62,7 +105,7 @@ router.get('/', async (req, res) => {
     data.sort((a, b) => a.start.valueOf() - b.start.valueOf());
     return res.json(data);
   } catch (err) {
-    res.status(500).send('Server Error');
+    return res.status(500).send('Server Error');
   }
 });
 

@@ -89,11 +89,11 @@ router.get('/', async (req, res) => {
             id: uuid(),
             platform: 'Atcoder',
             title: $(tds[1]).find('a').text(),
-            date: start.toUTCString().slice(0, -4),
+            date: start.toUTCString().slice(5, -4),
             start,
             end: new Date($(tds[0]).text().slice(0, -4) + time)
               .toUTCString()
-              .slice(0, -4),
+              .slice(5, -4),
 
             link: `https://atcoder.jp${prelink}`,
           });

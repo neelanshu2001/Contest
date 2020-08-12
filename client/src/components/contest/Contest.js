@@ -35,7 +35,7 @@ const Contest = ({ contest }) => {
               Enter
             </a>
           ) : (
-            <a href='#' className='btn btn-small disabled'>
+            <a href={link} className='btn btn-small disabled'>
               Enter
             </a>
           )}

@@ -24,7 +24,11 @@ const Searchbar = () => {
     <div className='container '>
       <nav className='grey lighten-2'>
         <div className='nav-wrapper'>
-          <form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+          >
             <div className='input-field grey-text text-darken-3'>
               <input
                 ref={text}

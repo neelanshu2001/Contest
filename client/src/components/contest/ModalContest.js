@@ -19,7 +19,7 @@ const ModalContest = ({ contest }) => {
               <i class='small material-icons'>chevron_right</i>
             </a>
           ) : (
-            <a href='#' className='btn btn-small disabled'>
+            <a href={link} className='btn btn-small disabled'>
               <i class='small material-icons'>chevron_right</i>
             </a>
           )}

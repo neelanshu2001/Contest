@@ -3,21 +3,27 @@ import ContestContext from '../../context/contests/contestContext';
 import Preloader from '../layout/Preloader';
 import M from 'materialize-css/dist/js/materialize.min.js';
 import Contest from '../contest/Contest';
-const Home = () => {
+const Today = () => {
   const contestContext = useContext(ContestContext);
-  const { error, loading, clearErrors, getContests, contest } = contestContext;
+  const {
+    error,
+    loading,
+    clearErrors,
+    getDayContest,
+    todayContest,
+  } = contestContext;
   useEffect(() => {
-    getContests();
+    getDayContest();
     if (error !== null) {
       M.toast(error);
       clearErrors();
     }
   }, [error]);
 
-  if (!loading && contest !== null && contest.length === 0) {
+  if (!loading && todayContest !== null && todayContest.length === 0) {
     return (
-      <div className='text-5xl text-center white pt-20 text-bold'>
-        No contests{' '}
+      <div className='white text-center text-5xl pt-20 text-bold'>
+        No contests today!!
       </div>
     );
   }
@@ -25,11 +31,11 @@ const Home = () => {
   return (
     <div className='white py-20 ' style={{ height: '800px' }}>
       <div className='text-center text-5xl font-mono font-bold mb-12'>
-        Upcoming Contests
+        Contests of the day
       </div>
-      {!loading && contest !== null ? (
+      {!loading && todayContest !== null ? (
         <div className=' grid grid-cols-1 gap-4 mt-10'>
-          {contest.map((contestItem) => (
+          {todayContest.map((contestItem) => (
             <Contest contest={contestItem} key={contestItem.id} />
           ))}
         </div>
@@ -42,4 +48,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Today;

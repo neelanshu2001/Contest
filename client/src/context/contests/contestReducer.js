@@ -3,10 +3,23 @@ import {
   CONTEST_ERROR,
   SET_LOADING,
   GET_CONTESTS,
+  GET_TODAYCONTESTS,
 } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
+    case GET_TODAYCONTESTS:
+      return {
+        ...state,
+        todayContest: action.payload.filter((contest) => {
+          if (
+            contest.date.slice(0, -8) === new Date().toUTCString().slice(5, -12)
+          )
+            return contest;
+        }),
+
+        loading: false,
+      };
     case GET_CONTESTS:
       return {
         ...state,

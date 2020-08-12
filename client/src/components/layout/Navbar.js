@@ -18,6 +18,9 @@ const Navbar = () => {
             <Link to='/'>Home</Link>
           </li>
           <li className='font-semibold px-2'>
+            <Link to='/today'>Today</Link>
+          </li>
+          <li className='font-semibold px-2'>
             <Link to='/about'>About</Link>
           </li>
 

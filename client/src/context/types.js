@@ -9,3 +9,6 @@ export const CLEAR_ERRORS = 'CLEAR_ERRORS';
 export const GET_CONTESTS = 'GET_CONTESTS';
 export const CONTEST_ERROR = 'CONTEST_ERROR';
 export const SET_LOADING = 'SET_LOADING';
+export const SET_CURRENT = 'SET_CURRENT';
+export const CLEAR_CURRENT = 'CLEAR_CURRENT';
+export const GET_TODAYCONTESTS = 'GET_TODAYCONTESTS';

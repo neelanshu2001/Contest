@@ -4,6 +4,8 @@ import {
   SET_LOADING,
   GET_CONTESTS,
   GET_TODAYCONTESTS,
+  FILTER_CONTESTS,
+  CLEAR_FILTER,
 } from '../types';
 
 export default (state, action) => {
@@ -31,6 +33,23 @@ export default (state, action) => {
         ...state,
         loading: false,
         error: null,
+      };
+    case FILTER_CONTESTS:
+      return {
+        ...state,
+        filtered: state.contest.filter((contestItem) => {
+          const regex = new RegExp(`${action.payload}`, 'gi');
+          return (
+            contestItem.title.match(regex) ||
+            contestItem.date.match(regex) ||
+            contestItem.platform.match(regex)
+          );
+        }),
+      };
+    case CLEAR_FILTER:
+      return {
+        ...state,
+        filtered: null,
       };
     case CONTEST_ERROR:
       return {

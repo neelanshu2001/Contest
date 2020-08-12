@@ -8,6 +8,8 @@ import {
   CLEAR_ERRORS,
   SET_LOADING,
   GET_TODAYCONTESTS,
+  FILTER_CONTESTS,
+  CLEAR_FILTER,
 } from '../types';
 
 const ContestState = (props) => {
@@ -15,7 +17,7 @@ const ContestState = (props) => {
     contest: null,
     loading: false,
     error: null,
-    current: null,
+    filtered: null,
     todayContest: null,
   };
   const [state, dispatch] = useReducer(contestReducer, initialState);
@@ -48,18 +50,28 @@ const ContestState = (props) => {
       dispatch({ type: CONTEST_ERROR, payload: err.response });
     }
   };
+  //FILTER CONTESTS
+  const filterContests = (text) => {
+    dispatch({ type: FILTER_CONTESTS, payload: text });
+  };
+  //Clear Filter
+  const clearFilter = () => {
+    dispatch({ type: CLEAR_FILTER });
+  };
   return (
     <contestContext.Provider
       value={{
         contest: state.contest,
         loading: state.loading,
         error: state.error,
-        current: state.current,
+        filtered: state.filtered,
         todayContest: state.todayContest,
         getDayContest,
         getContests,
         setLoading,
         clearErrors,
+        filterContests,
+        clearFilter,
       }}
     >
       {props.children}

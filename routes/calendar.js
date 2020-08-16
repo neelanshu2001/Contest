@@ -30,8 +30,8 @@ router.post('/', auth, async (req, res) => {
     user: req.user.id,
   });
 
-  Cloudstart = { dateTime: new Date(date), timeZone: '+0000' };
-  Cloudend = { dateTime: new Date(end), timeZone: '+0000' };
+  // Cloudstart = { dateTime: new Date(date), timeZone: '+0000' };
+  // Cloudend = { dateTime: new Date(end), timeZone: '+0000' };
 
   // Cloudstart = { dateTime: new Date(date), timeZone: '+0530' };
   // Cloudend = { dateTime: new Date(end), timeZone: '+0530' };
@@ -39,8 +39,8 @@ router.post('/', auth, async (req, res) => {
   const newCloudEvent = {
     summary: platform,
     description: title,
-    start: Cloudstart,
-    end: Cloudend,
+    start: { dateTime: new Date(date), timeZone: '+0530' },
+    end: { dateTime: new Date(end), timeZone: '+0530' },
     colorId: 1,
   };
 

@@ -24,14 +24,14 @@ router.get('/', async (req, res) => {
       .each((i, el) => {
         tds = $(el).find('td');
         prelink = $(tds).find('a').attr('href');
-        start = new Date($(tds[2]).text());
+        start = new Date($(tds[2]).text()+'+0000');
         data.push({
           id: uuid(),
           platform: 'Codechef',
           title: $(tds[1]).text().replace(/\s\s+/g, ''),
           date: start.toUTCString().slice(0, -4), //Ist format
           start, //Gmt format
-          end: new Date($(tds[3]).text()).toUTCString().slice(0, -4),
+          end: new Date($(tds[3]).text()+'+0000').toUTCString().slice(0, -4),
           link: `https://www.codechef.com${prelink}`,
         });
       });

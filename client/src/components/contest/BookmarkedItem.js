@@ -4,6 +4,8 @@ import ContestContext from '../../context/contests/contestContext';
 import chef from '../../assets/images/chef.jfif';
 import forces from '../../assets/images/forces.jfif';
 import coder from '../../assets/images/coder.png';
+import earth from '../../assets/images/earth.png';
+import leetcode from '../../assets/images/leetcode.png';
 import M from 'materialize-css/dist/js/materialize.min.js';
 const BookmarkedItem = ({ contest }) => {
   const { title, date, end, link, platform, _id } = contest;
@@ -21,7 +23,11 @@ const BookmarkedItem = ({ contest }) => {
               ? chef
               : platform === 'CodeForces'
               ? forces
-              : coder
+              : platform === 'Atcoder'
+              ? coder
+              : platform === 'Hackerearth'
+              ? earth
+              : leetcode
           }
           alt='Logo'
         />

@@ -22,7 +22,7 @@ const Searchbar = () => {
   };
   return (
     <div className='container '>
-      <nav className='grey lighten-2'>
+      <nav className='grey lighten-2 rounded-lg'>
         <div className='nav-wrapper'>
           <form
             onSubmit={(e) => {

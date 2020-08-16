@@ -162,64 +162,12 @@ router.get('/', async (req, res) => {
             link: link,
           });
         });
+      return res.json(data);
     } catch (err) {
       return res.status(500).send('Server Error');
     }
-    try {
-      const url = 'https://leetcode.com/contest/';
-      puppeteer
-        .launch()
-        .then((browser) => browser.newPage())
-        .then((page) => {
-          return page.goto(url).then(function () {
-            return page.content();
-          });
-        })
-        .then((html) => {
-          const $ = cheerio.load(html);
-          $('.contest-upcoming')
-            .find('a')
-            .each((i, el) => {
-              const link = $(el).attr('href');
-              if (link === undefined) return true;
-              const finallink = 'https://leetcode.com' + link;
-              const title = $(el).find('.card-title.false').text();
-              const date = $(el)
-                .find('.time')
-                .text()
-                .replace(',', '')
-                .substr(0, 11);
-              const stime = $(el)
-                .find('.time')
-                .text()
-                .replace(',', '')
-                .substr(14, 7);
-              const etime = $(el)
-                .find('.time')
-                .text()
-                .replace(',', '')
-                .substr(24, 7);
-              const sdate = new Date(date.concat(' ', stime, '+0000'));
-              const edate = new Date(date.concat(' ', etime, '+0000'));
-              const startdate = sdate.toUTCString().slice(0, -4);
-              const enddate = edate.toUTCString().slice(0, -4);
-              data.push({
-                id: uuid(),
-                platform: 'Leetcode',
-                title: title,
-                date: startdate,
-                start: sdate,
-                end: enddate,
-                link: finallink,
-              });
-            });
-          data.sort((a, b) => a.start.valueOf() - b.start.valueOf());
-          return res.json(data);
-        });
-    } catch (err) {
-      return res.status(500).send('Server Error');
-    }
-    console.log(data);
+
+    // console.log(data);
   } catch (err) {
     return res.status(500).send('Server Error');
   }

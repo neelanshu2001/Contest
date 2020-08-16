@@ -29,13 +29,13 @@ router.post('/', auth, async (req, res) => {
     link,
     user: req.user.id,
   });
-  if (process.env.NODE_ENV === 'production') {
-    Cloudstart = { dateTime: new Date(date), timeZone: '+0000' };
-    Cloudend = { dateTime: new Date(end), timeZone: '+0000' };
-  } else {
-    Cloudstart = { dateTime: new Date(date), timeZone: '+0530' };
-    Cloudend = { dateTime: new Date(end), timeZone: '+0530' };
-  }
+
+  Cloudstart = { dateTime: new Date(date), timeZone: '+0000' };
+  Cloudend = { dateTime: new Date(end), timeZone: '+0000' };
+
+  // Cloudstart = { dateTime: new Date(date), timeZone: '+0530' };
+  // Cloudend = { dateTime: new Date(end), timeZone: '+0530' };
+
   const newCloudEvent = {
     summary: platform,
     description: title,

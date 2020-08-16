@@ -2,6 +2,8 @@ import React from 'react';
 import chef from '../../assets/images/chef.jfif';
 import forces from '../../assets/images/forces.jfif';
 import coder from '../../assets/images/coder.png';
+import earth from '../../assets/images/earth.png';
+import leetcode from '../../assets/images/leetcode.png';
 const Contest = ({ contest }) => {
   const { title, date, end, link, platform } = contest;
   return (
@@ -14,7 +16,11 @@ const Contest = ({ contest }) => {
               ? chef
               : platform === 'CodeForces'
               ? forces
-              : coder
+              : platform === 'Atcoder'
+              ? coder
+              : platform === 'Hackerearth'
+              ? earth
+              : leetcode
           }
           alt='Logo'
         />
@@ -23,7 +29,7 @@ const Contest = ({ contest }) => {
       <div className=' text-3xl font-bold blue-text text-darken-3  container '>
         {platform}
         <div className='text-xl text-indigo-700'>{title}</div>
-        <div className='text-sm text-red-400 '>
+        <div className='text-sm text-red-a400 '>
           Start :<span className='text-red-600'> {date}</span>
         </div>
         <div className='text-sm text-red-400'>

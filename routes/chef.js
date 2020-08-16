@@ -3,7 +3,10 @@ const express = require('express');
 const router = express.Router();
 const config = require('config');
 const cheerio = require('cheerio');
-const { v4: uuid } = require('uuid');
+const puppeteer = require('puppeteer');
+const {
+  v4: uuid
+} = require('uuid');
 //@route GET /contests
 //@desc Getting scrapped data
 //@access PUBLIC
@@ -48,9 +51,9 @@ router.get('/', async (req, res) => {
               .slice(0, -4), //IST format
             start: new Date(postdata.startTimeSeconds * 1000), //GMT Format
             end: new Date(
-              (postdata.durationSeconds + 19800 + postdata.startTimeSeconds) *
+                (postdata.durationSeconds + 19800 + postdata.startTimeSeconds) *
                 1000
-            )
+              )
               .toUTCString()
               .slice(0, -4),
             link: `https://codeforces.com/contests/${contestid}`,
@@ -102,9 +105,98 @@ router.get('/', async (req, res) => {
     } catch (err) {
       return res.status(500).send('Server Error');
     }
-
-    data.sort((a, b) => a.start.valueOf() - b.start.valueOf());
-    return res.json(data);
+    try {
+      html = await axios.get('https://www.hackerearth.com/challenges/?filters=competitive%2Chackathon%2Chiring');
+      $ = cheerio.load(html.data);
+      $('.upcoming.challenge-list')
+        .find('a')
+        .each(async (i, el) => {
+          var link = $(el).attr('href');
+          if (link === undefined) return true;
+          if (link[0] === '/') {
+            link = 'https://www.hackerearth.com' + link;
+          }
+          const title = $(el).find('.challenge-name.ellipsis.dark').text().replace(/\s\s+/g, '');
+          const key = link.substr(39, 4);
+          var enddate = '';
+          var startdate = '';
+          var start = '';
+          let html1 = await axios.get(link);
+          let $1 = cheerio.load(html1.data);
+          var d = new Date();
+          var year = d.getFullYear();
+          if (key === "comp" || key === "hiri") {
+            const a = $1('.timing-text.dark.regular.weight-700');
+            const finaldate = $1(a[1]).text().substr(0, 7).concat(year, $1(a[1]).text().substr(7));
+            const initialdate = $1(a[0]).text().substr(0, 7).concat(year, $1(a[0]).text().substr(7));
+            const end = new Date(finaldate + '-1030');
+            start = new Date(initialdate + '-1030');
+            enddate = end.toUTCString().slice(0, -4).replace(/\s\s+/g, '');
+            startdate = start.toUTCString().slice(0, -4).replace(/\s\s+/g, '');
+          } else if (key === "hack") {
+            const a = $1('.regular.bold.desc.dark');
+            const finaldate = $1(a[2]).text();
+            const initialdate = $1(a[1]).text();
+            const end = new Date(finaldate + '-1030');
+            start = new Date(initialdate + '-1030');
+            enddate = end.toUTCString().slice(0, -4).replace(/\s\s+/g, '');
+            startdate = start.toUTCString().slice(0, -4).replace(/\s\s+/g, '');
+          }
+          data.push({
+            id: uuid(),
+            platform: 'Hackerearth',
+            title: title,
+            date: startdate,
+            start: start,
+            end: enddate,
+            link: link,
+          });
+        });
+    } catch (err) {
+      return res.status(500).send('Server Error');
+    }
+    try {
+      const url = 'https://leetcode.com/contest/';
+      puppeteer
+        .launch()
+        .then(browser => browser.newPage())
+        .then(page => {
+          return page.goto(url).then(function () {
+            return page.content();
+          });
+        })
+        .then(html => {
+          const $ = cheerio.load(html);
+          $('.contest-upcoming')
+          .find('a')
+          .each((i, el) => {
+            const link = $(el).attr('href');
+            if (link === undefined) return true;
+            const finallink = 'https://leetcode.com' + link;
+            const title = $(el).find('.card-title.false').text();
+            const date = $(el).find('.time').text().replace(',', '').substr(0, 11);
+            const stime = $(el).find('.time').text().replace(',', '').substr(14, 7);
+            const etime = $(el).find('.time').text().replace(',', '').substr(24, 7);
+            const sdate = new Date(date.concat(" ", stime, '+0000'));
+            const edate = new Date(date.concat(" ", etime, '+0000'));
+            const startdate = sdate.toUTCString().slice(0, -4);
+            const enddate = edate.toUTCString().slice(0, -4);
+            data.push({
+              id: uuid(),
+              platform: 'Leetcode',
+              title: title,
+              date: startdate,
+              start: sdate,
+              end: enddate,
+              link: finallink,
+            });
+          });
+          data.sort((a, b) => a.start.valueOf() - b.start.valueOf());
+          return res.json(data);
+        })
+    } catch (err) {
+      return res.status(500).send('Server Error');
+    }
   } catch (err) {
     return res.status(500).send('Server Error');
   }

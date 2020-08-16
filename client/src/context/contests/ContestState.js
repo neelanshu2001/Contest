@@ -2,6 +2,7 @@ import React, { useReducer } from 'react';
 import axios from 'axios';
 import contestContext from './contestContext';
 import contestReducer from './contestReducer';
+
 import {
   CONTEST_ERROR,
   GET_CONTESTS,
@@ -10,6 +11,10 @@ import {
   GET_TODAYCONTESTS,
   FILTER_CONTESTS,
   CLEAR_FILTER,
+  EVENT_ERROR,
+  SET_EVENT,
+  REMOVE_EVENT,
+  GET_USEREVENTS,
 } from '../types';
 
 const ContestState = (props) => {
@@ -19,6 +24,7 @@ const ContestState = (props) => {
     error: null,
     filtered: null,
     todayContest: null,
+    userEvents: [],
   };
   const [state, dispatch] = useReducer(contestReducer, initialState);
   //set Loading
@@ -58,6 +64,55 @@ const ContestState = (props) => {
   const clearFilter = () => {
     dispatch({ type: CLEAR_FILTER });
   };
+  //const set Event
+  const setEvent = async (event) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    try {
+      const res = await axios.post('/calendar', event, config);
+      dispatch({ type: SET_EVENT, payload: res.data });
+    } catch (err) {
+      dispatch({ type: EVENT_ERROR, payload: err.response.msg });
+    }
+  };
+
+  //delete event from calendar
+  const removeEvent = async (event) => {
+    setLoading();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        event,
+      },
+    };
+    try {
+      await axios.delete(`/calendar/${event.id}`, config);
+      dispatch({ type: REMOVE_EVENT, payload: event.id });
+    } catch (err) {
+      dispatch({ type: EVENT_ERROR, payload: err.response.msg });
+    }
+  };
+  //get user events
+  const getUserEvents = async () => {
+    try {
+      setLoading();
+      const res = await axios.get('/calendar');
+      dispatch({
+        type: GET_USEREVENTS,
+        payload: res.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: EVENT_ERROR,
+        payload: err.response.msg,
+      });
+    }
+  };
   return (
     <contestContext.Provider
       value={{
@@ -66,12 +121,16 @@ const ContestState = (props) => {
         error: state.error,
         filtered: state.filtered,
         todayContest: state.todayContest,
+        userEvents: state.userEvents,
         getDayContest,
         getContests,
         setLoading,
         clearErrors,
         filterContests,
         clearFilter,
+        setEvent,
+        removeEvent,
+        getUserEvents,
       }}
     >
       {props.children}

@@ -5,10 +5,10 @@ import chef from '../../assets/images/chef.jfif';
 import forces from '../../assets/images/forces.jfif';
 import coder from '../../assets/images/coder.png';
 import M from 'materialize-css/dist/js/materialize.min.js';
-const Contest = ({ contest }) => {
-  const { title, date, end, link, platform, start } = contest;
+const BookmarkedItem = ({ contest }) => {
+  const { title, date, end, link, platform, _id } = contest;
   const contestContext = useContext(ContestContext);
-  const { setEvent, userEvents, getUserEvents, error } = contestContext;
+  const { removeEvent, error } = contestContext;
   const authContext = useContext(AuthContext);
   const { gtoken } = authContext;
   return (
@@ -49,39 +49,22 @@ const Contest = ({ contest }) => {
         </div>
       </div>
       {gtoken ? (
-        userEvents === null ||
-        (userEvents !== null &&
-          userEvents.filter((userEvent) => title === userEvent.title).length ===
-            0) ? (
-          <div>
-            <button
-              className='btn btn-flat '
-              onClick={(e) => {
-                setEvent({
-                  event: {
-                    platform,
-                    title,
-                    link,
-                    start,
-                    date,
-                    end,
-                  },
-                  gtoken,
-                });
-
-                getUserEvents();
-                if (!error) {
-                  M.toast({ html: `${title} added to bookmarks` });
-                }
-              }}
-            >
-              <i className='black-text material-icons'>add_alarm</i>
-            </button>
-          </div>
-        ) : null
+        <div>
+          <button
+            className='btn btn-flat'
+            onClick={(e) => {
+              removeEvent({ title, gtoken: gtoken, id: _id });
+              if (!error) {
+                M.toast({ html: `${title} deleted from bookmarks` });
+              }
+            }}
+          >
+            <i className='text-black material-icons'>delete</i>
+          </button>
+        </div>
       ) : null}
     </div>
   );
 };
 
-export default Contest;
+export default BookmarkedItem;

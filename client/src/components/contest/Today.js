@@ -18,6 +18,7 @@ const Today = () => {
       M.toast(error);
       clearErrors();
     }
+    //eslint-disable-next-line
   }, [error]);
 
   return (

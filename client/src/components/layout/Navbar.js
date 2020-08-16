@@ -1,10 +1,23 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import AuthContext from '../../context/auth/authContext';
 
 const Navbar = () => {
   const authContext = useContext(AuthContext);
-  const { isAuthenticated, loading, logout, user } = authContext;
+  const {
+    isAuthenticated,
+    loading,
+    logout,
+    user,
+    loadUser,
+    token,
+  } = authContext;
+
+  useEffect(() => {
+    if (localStorage.token) loadUser();
+
+    //eslint-disable-next-line
+  }, [token]);
 
   return (
     <nav
@@ -20,6 +33,12 @@ const Navbar = () => {
 
           <li className='font-semibold px-2'>
             <Link to='/about'>About</Link>
+          </li>
+
+          <li className='font-semibold px-2'>
+            {isAuthenticated && !loading ? (
+              <Link to='/bookmarks'>Bookmarks</Link>
+            ) : null}
           </li>
 
           <li className='font-semibold px-2'>

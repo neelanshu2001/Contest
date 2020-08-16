@@ -11,12 +11,13 @@ const Login = (props) => {
   });
   useEffect(() => {
     if (isAuthenticated) {
-      props.history.push('/');
+      props.history.push('/privacy-policy');
     }
     if (error && !loading) {
       M.toast({ html: error });
       clearErrors();
     }
+    //eslint-disable-next-line
   }, [error, isAuthenticated, loading, props.history]);
 
   const onChange = (e) => {
@@ -34,8 +35,11 @@ const Login = (props) => {
   };
 
   return (
-    <div className='white' style={{ height: '800px', paddingTop: '20px' }}>
-      <div className='container' style={{ marginTop: '100px' }}>
+    <div className='white pt-20 ' style={{ height: '800px' }}>
+      <div className=' container grey lighten-5 py-6 border-gray-300 shadow-xl rounded-lg border-transparent '>
+        <div className=' text-center  text-blue-700  text-5xl font-semibold'>
+          Login
+        </div>
         <form onSubmit={onSubmit}>
           <div className='container'>
             <label htmlFor='Username'>Username</label>
@@ -57,11 +61,14 @@ const Login = (props) => {
               required
             />
           </div>
-          <div className='object-right'>
+          <div className='block blue-text text-right text-sm container'>
             <input type='submit' value='Login' className='btn blue darken-3 ' />
           </div>
         </form>
-        <div className='block blue-text text-right text-sm'>
+        <div
+          className='block blue-text text-right text-sm mt-10 container'
+          style={{ marginTop: '20px' }}
+        >
           <a href='/register'>Sign up</a>
         </div>
       </div>

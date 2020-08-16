@@ -6,23 +6,43 @@ import {
   GET_TODAYCONTESTS,
   FILTER_CONTESTS,
   CLEAR_FILTER,
+  SET_EVENT,
+  EVENT_ERROR,
+  REMOVE_EVENT,
+  GET_USEREVENTS,
 } from '../types';
 
 export default (state, action) => {
   switch (action.type) {
+    case GET_USEREVENTS:
+      return {
+        ...state,
+        userEvents: action.payload,
+        loading: false,
+      };
+    case SET_EVENT:
+      return {
+        ...state,
+        userEvents: [...state.userEvents, action.payload],
+      };
+    case REMOVE_EVENT:
+      return {
+        ...state,
+        userEvents: state.userEvents.filter(
+          (event) => event._id !== action.payload
+        ),
+        loading: false,
+      };
     case GET_TODAYCONTESTS:
       return {
         ...state,
-        todayContest: action.payload.filter((contest) => {
-          if (
+        todayContest: action.payload.filter(
+          (contest) =>
             contest.date.slice(0, -8) ===
             new Date(new Date().toUTCString().slice(0, -4) + '-0530')
               .toUTCString()
               .slice(0, -12)
-          ) {
-            return contest;
-          }
-        }),
+        ),
 
         loading: false,
       };
@@ -55,6 +75,7 @@ export default (state, action) => {
         ...state,
         filtered: null,
       };
+    case EVENT_ERROR:
     case CONTEST_ERROR:
       return {
         ...state,

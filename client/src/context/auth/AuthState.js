@@ -12,6 +12,8 @@ import {
   AUTH_ERROR,
   REGISTER_FAIL,
   REGISTER_SUCCESS,
+  SET_TOKEN,
+  NO_TOKEN,
 } from '../types';
 
 const AuthState = (props) => {
@@ -21,6 +23,7 @@ const AuthState = (props) => {
     loading: true,
     user: null,
     error: null,
+    gtoken: localStorage.getItem('gtoken'),
   };
   const [state, dispatch] = useReducer(authReducer, initialState);
   //loadUser
@@ -32,7 +35,7 @@ const AuthState = (props) => {
       const res = await axios.get('/api/auth');
       dispatch({
         type: USER_LOADED,
-        payload: res.data,
+        payload: res.data.user,
       });
     } catch (err) {
       dispatch({
@@ -80,6 +83,22 @@ const AuthState = (props) => {
   const logout = () => {
     dispatch({ type: LOGOUT });
   };
+
+  //setToken
+  const setgtoken = async (code) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    try {
+      const res = await axios.post('/gauth', code, config);
+      dispatch({ type: SET_TOKEN, payload: res.data });
+    } catch (err) {
+      dispatch({ type: NO_TOKEN, payload: err });
+    }
+  };
+
   return (
     <authContext.Provider
       value={{
@@ -88,11 +107,14 @@ const AuthState = (props) => {
         loading: state.loading,
         user: state.user,
         error: state.error,
+        gtoken: state.gtoken,
+        redirect: state.redirect,
         login,
         clearErrors,
         loadUser,
         logout,
         register,
+        setgtoken,
       }}
     >
       {props.children}

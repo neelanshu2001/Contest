@@ -29,12 +29,18 @@ router.post('/', auth, async (req, res) => {
     link,
     user: req.user.id,
   });
-
+  if (process.env.NODE_ENV === 'production') {
+    Cloudstart = { dateTime: new Date(date), timeZone: '+0000' };
+    Cloudend = { dateTime: new Date(end), timeZone: '+0000' };
+  } else {
+    Cloudstart = { dateTime: new Date(date), timeZone: '+0530' };
+    Cloudend = { dateTime: new Date(end), timeZone: '+0530' };
+  }
   const newCloudEvent = {
     summary: platform,
     description: title,
-    start: { dateTime: new Date(date), timeZone: '+0530' },
-    end: { dateTime: new Date(end), timeZone: '+0530' },
+    start: Cloudstart,
+    end: Cloudend,
     colorId: 1,
   };
 
@@ -45,7 +51,7 @@ router.post('/', auth, async (req, res) => {
       calendarId: 'primary',
       resource: newCloudEvent,
     });
-    console.log(event);
+    // console.log(event);
     try {
       const event = await newEvent.save();
       return res.json(event);
@@ -54,7 +60,7 @@ router.post('/', auth, async (req, res) => {
       res.status(500).send('Server Error');
     }
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(400).json({ msg: 'Event not added' });
   }
 });
@@ -69,8 +75,8 @@ router.delete('/:id', auth, async (req, res) => {
     config.get('client_secret'),
     config.get('redirect_uris')
   );
-  console.log(req.body.event.gtoken);
-  console.log(req.body.event);
+  //console.log(req.body.event.gtoken);
+  //console.log(req.body.event);
   oauth2Client.setCredentials({ refresh_token: req.body.event.gtoken });
   const calendar = google.calendar({ version: 'v3', auth: oauth2Client });
   try {
@@ -80,7 +86,7 @@ router.delete('/:id', auth, async (req, res) => {
       q: `${req.body.event.title}`,
     });
 
-    console.log(events.data.items);
+    //console.log(events.data.items);
 
     if (events.data.items.length === 0) {
       return res.status(400).json({ msg: 'No event ' });
@@ -90,7 +96,7 @@ router.delete('/:id', auth, async (req, res) => {
           calendarId: 'primary',
           eventId: events.data.items[0].id,
         });
-        console.log('Event deleted');
+        //console.log('Event deleted');
         try {
           let userEvent = await UserEvents.findById(req.params.id);
           if (!userEvent) console.log('Event doesnt exist');
@@ -102,16 +108,16 @@ router.delete('/:id', auth, async (req, res) => {
             msg: `Event Removed  ${events.data.items[0].summary}`,
           });
         } catch (err) {
-          console.log(err);
+          // console.log(err);
           return res.status(500).send('Server Error');
         }
       } catch (err) {
-        console.log(err);
+        // console.log(err);
         return res.json({ msg: `Event not deleted` });
       }
     }
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     return res.status(400).json({ msg: 'Sever Error' });
   }
 });

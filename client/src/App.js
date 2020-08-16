@@ -33,7 +33,7 @@ const App = () => {
                 path='/privacy-policy'
                 component={() => {
                   window.location.href =
-                    'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events&prompt=consent&response_type=code&client_id=951516170038-0lffk7n9l5a2joohkb6dat4is14f8ht5.apps.googleusercontent.com&redirect_uri=https%3A%2F%2Fsecret-reef-31415.herokuapp.com%2Foauth2callback';
+                    'https://accounts.google.com/o/oauth2/v2/auth?access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcalendar.events&prompt=consent&response_type=code&client_id=951516170038-0lffk7n9l5a2joohkb6dat4is14f8ht5.apps.googleusercontent.com&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Foauth2callback';
                   return null;
                 }}
               />

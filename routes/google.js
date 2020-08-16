@@ -9,21 +9,21 @@ router.post('/', async (req, res) => {
     config.get('client_secret'),
     config.get('redirect_uris')
   );
-  //generate a url that asks permissions for Blogger and Google Calendar scopes
-  //const scopes = [
-  //   'https://www.googleapis.com/auth/calendar',
-  //   'https://www.googleapis.com/auth/calendar.events',
-  // ];
-  // try {
-  //   const url = await oauth2Client.generateAuthUrl({
-  //     // 'online' (default) or 'offline' (gets refresh_token)
-  //     access_type: 'offline',
+  // generate a url that asks permissions for Blogger and Google Calendar scopes
+  const scopes = [
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/calendar.events',
+  ];
 
-  //     // If you only need one scope you can pass it as a string
-  //     scope: scopes,
-  //     prompt: 'consent',
-  //   });
-  // console.log(url);
+  const url = await oauth2Client.generateAuthUrl({
+    // 'online' (default) or 'offline' (gets refresh_token)
+    access_type: 'offline',
+
+    //If you only need one scope you can pass it as a string
+    scope: scopes,
+    prompt: 'consent',
+  });
+  console.log(url);
 
   try {
     const { tokens } = await oauth2Client.getToken(req.body.code);

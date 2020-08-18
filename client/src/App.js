@@ -32,7 +32,7 @@ const App = () => {
               <Route
                 path='/privacy-policy'
                 component={() => {
-                  window.location.href =
+                  window.location.href =''
                   return null;
                 }}
               />

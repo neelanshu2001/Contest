@@ -8,12 +8,16 @@ import earth from '../../assets/images/earth.png';
 import leetcode from '../../assets/images/leetcode.png';
 import other from '../../assets/images/other.jpg';
 import M from 'materialize-css/dist/js/materialize.min.js';
-const BookmarkedItem = ({ contest }) => {
-  const { title, date, end, link, platform, _id } = contest;
+const Addedcontest = ({ contest }) => {
+  const { title, startdate,starttime, enddate, endtime, link, platform, _id } = contest;
   const contestContext = useContext(ContestContext);
-  const { removeEvent, error } = contestContext;
+  const { deleteAddedContest,getContests, getDayContest, error } = contestContext;
   const authContext = useContext(AuthContext);
-  const { gtoken } = authContext;
+  const { isAuthenticated } = authContext;
+  const start=new Date( (startdate).concat(' ',(starttime),' +0000' ) );
+  const end_=new Date( (enddate).concat(' ',(endtime),' +0000' ) );
+  const date=start.toUTCString().slice(0, -4);
+  const end=end_.toUTCString().slice(0, -4);
   return (
     <div className='container flex flex-row grey lighten-3 shadow-2xl  p-8 rounded-lg'>
       <div className='mr-12 mb-4'>
@@ -57,14 +61,16 @@ const BookmarkedItem = ({ contest }) => {
           )}
         </div>
       </div>
-      {gtoken ? (
+      {isAuthenticated ? (
         <div>
           <button
             className='btn btn-flat'
             onClick={(e) => {
-              removeEvent({ title, gtoken: gtoken, id: _id });
+              deleteAddedContest({ title, id: _id });
+              getContests();
+              getDayContest();
               if (!error) {
-                M.toast({ html: `${title} deleted from bookmarks` });
+                M.toast({ html: `${title} deleted from Added Contests` });
               }
             }}
           >
@@ -76,4 +82,4 @@ const BookmarkedItem = ({ contest }) => {
   );
 };
 
-export default BookmarkedItem;
+export default Addedcontest;

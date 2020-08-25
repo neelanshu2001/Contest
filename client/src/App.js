@@ -4,7 +4,10 @@ import Navbar from './components/layout/Navbar';
 import Home from './components/pages/Home';
 import About from './components/pages/About';
 import Bookmarked from './components/pages/Bookmarked';
+import Addedcontests from './components/pages/Addedcontests';
 import Today from './components/contest/Today';
+import Addcontest from './components/contest/Addcontest';
+import Logintoadd from './components/contest/logintoadd';
 import Login from './components/auth/Login';
 import Register from './components/auth/Register';
 import AuthState from './context/auth/AuthState';
@@ -27,6 +30,8 @@ const App = () => {
             </div>
             <Navbar />
             <Today />
+            <Addcontest />
+            <Logintoadd />
             <Switch>
               <Route exact path='/about' component={About} />
               <Route
@@ -37,6 +42,7 @@ const App = () => {
                 }}
               />
               <Route exact path='/bookmarks' component={Bookmarked} />
+              <Route exact path='/addedcontests' component={Addedcontests} />
               <Route exact path='/login' component={Login} />
               <Route exact path='/register' component={Register} />
               <Route path='/' component={Home} />

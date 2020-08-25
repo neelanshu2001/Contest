@@ -6,6 +6,7 @@ import forces from '../../assets/images/forces.jfif';
 import coder from '../../assets/images/coder.png';
 import earth from '../../assets/images/earth.png';
 import leetcode from '../../assets/images/leetcode.png';
+import other from '../../assets/images/other.jpg';
 import M from 'materialize-css/dist/js/materialize.min.js';
 const Contest = ({ contest }) => {
   const { title, date, end, link, platform, start } = contest;
@@ -27,7 +28,9 @@ const Contest = ({ contest }) => {
               ? coder
               : platform === 'Hackerearth'
               ? earth
-              : leetcode
+              : platform === 'Leetcode'
+              ? leetcode
+              : other
           }
           alt='Logo'
         />

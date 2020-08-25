@@ -10,6 +10,9 @@ import {
   EVENT_ERROR,
   REMOVE_EVENT,
   GET_USEREVENTS,
+  ADD_CONTEST,
+  USER_ADDED_CONTEST,
+  DELETE_CONTEST,
 } from '../types';
 
 export default (state, action) => {
@@ -86,6 +89,25 @@ export default (state, action) => {
       return {
         ...state,
         loading: true,
+      };
+    case ADD_CONTEST:
+      return{
+        ...state,
+        addedContests: [...state.addedContests, action.payload]
+      }
+    case USER_ADDED_CONTEST:
+      return {
+        ...state,
+        userContests: action.payload,
+        loading: false,
+      }; 
+    case DELETE_CONTEST:
+      return{
+        ...state,
+        userContests: state.userContests.filter(
+          (contest) => contest._id !== action.payload
+        ),
+        loading: false, 
       };
     default:
       return {

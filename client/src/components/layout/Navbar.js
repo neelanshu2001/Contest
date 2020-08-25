@@ -40,6 +40,11 @@ const Navbar = () => {
               <Link to='/bookmarks'>Bookmarks</Link>
             ) : null}
           </li>
+          <li className='font-semibold px-2'>
+            {isAuthenticated? (
+              <Link to='/addedcontests'>Added Contests</Link>
+            ) : null}
+          </li>
 
           <li className='font-semibold px-2'>
             {isAuthenticated && !loading ? (

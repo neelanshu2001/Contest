@@ -18,3 +18,7 @@ export const EVENT_ERROR = 'EVENT_ERROR';
 export const SET_TOKEN = 'SET_TOKEN';
 export const REMOVE_EVENT = 'REMOVE_EVENT';
 export const GET_USEREVENTS = 'GET_USEREVENTS';
+export const ADD_CONTEST = 'ADD_CONTEST';
+export const DELETE_CONTEST = 'DELETE_CONTEST';
+export const USER_ADDED_CONTEST = 'USER_ADDED_CONTEST';
+

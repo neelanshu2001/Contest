@@ -15,6 +15,9 @@ import {
   SET_EVENT,
   REMOVE_EVENT,
   GET_USEREVENTS,
+  ADD_CONTEST,
+  DELETE_CONTEST,
+  USER_ADDED_CONTEST
 } from '../types';
 
 const ContestState = (props) => {
@@ -25,6 +28,8 @@ const ContestState = (props) => {
     filtered: null,
     todayContest: null,
     userEvents: [],
+    addedContests:[],
+    userContests:[],
   };
   const [state, dispatch] = useReducer(contestReducer, initialState);
   //set Loading
@@ -113,6 +118,54 @@ const ContestState = (props) => {
       });
     }
   };
+   // Add contest
+   const addContest = async(contest) => {
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    };
+    try {
+      const res = await axios.post('/api/addcontest', contest, config);
+      dispatch({ type: ADD_CONTEST, payload: res.data });
+    } catch (err) {
+      dispatch({ type: CONTEST_ERROR, payload: err.response });
+    }
+  };
+  //get user added contests
+  const getUseraddedcontests = async () => {
+    try {
+      setLoading();
+      const res = await axios.get('/api/addcontest/user');
+      dispatch({
+        type: USER_ADDED_CONTEST,
+        payload: res.data,
+      });
+    } catch (err) {
+      dispatch({
+        type: CONTEST_ERROR,
+        payload: err.response.msg,
+      });
+    }
+  };
+  //delete added contest
+  const deleteAddedContest = async (contest) => {
+    setLoading();
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      data: {
+        contest,
+      },
+    };
+    try {
+      await axios.delete(`/api/addcontest/${contest.id}`, config);
+      dispatch({ type: DELETE_CONTEST, payload: contest.id });
+    } catch (err) {
+      dispatch({ type: CONTEST_ERROR, payload: err.response.msg });
+    }
+  };
   return (
     <contestContext.Provider
       value={{
@@ -122,6 +175,8 @@ const ContestState = (props) => {
         filtered: state.filtered,
         todayContest: state.todayContest,
         userEvents: state.userEvents,
+        addedContests:state.addedContests,
+        userContests:state.userContests,
         getDayContest,
         getContests,
         setLoading,
@@ -131,6 +186,9 @@ const ContestState = (props) => {
         setEvent,
         removeEvent,
         getUserEvents,
+        addContest,
+        getUseraddedcontests,
+        deleteAddedContest,
       }}
     >
       {props.children}

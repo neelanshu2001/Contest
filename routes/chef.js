@@ -3,7 +3,8 @@ const express = require('express');
 const router = express.Router();
 const config = require('config');
 const cheerio = require('cheerio');
-const puppeteer = require('puppeteer');
+const Contest = require('../models/contest');
+//const puppeteer = require('puppeteer');
 const { v4: uuid } = require('uuid');
 //@route GET /contests
 //@desc Getting scrapped data
@@ -62,6 +63,31 @@ router.get('/', async (req, res) => {
       return res.status(500).send('Server Error');
     }
     try {
+      Contest.find()
+        .then(contests => contests.map(function (contest) {
+            const start=new Date( (contest.startdate).concat(' ',(contest.starttime),' +0000' ) );
+            const end=new Date( (contest.enddate).concat(' ',(contest.endtime),' +0000' ) );
+            const cmpstart=new Date( (contest.startdate).concat(' ',(contest.starttime) ) );
+            const todaydate= new Date();
+            const link=contest.link;
+            if(cmpstart>= todaydate){
+              data.push({
+                    id: uuid(),
+                    platform: contest.platform,
+                    title: contest.title,
+                    date: start.toUTCString().slice(0, -4),
+                    start: start,
+                    end: end.toUTCString().slice(0, -4),
+                    link:  `${link}`,
+              });
+            }
+         })
+       );
+      // console.log(data);
+    } catch (err) {
+      return res.status(500).send('Server Error');
+    }
+    try {
       html = await axios.get('https://atcoder.jp/contests/');
       $ = cheerio.load(html.data);
       $('#contest-table-upcoming')
@@ -103,71 +129,10 @@ router.get('/', async (req, res) => {
     } catch (err) {
       return res.status(500).send('Server Error');
     }
-    console.log(data);
-    try {
-      html = await axios.get(
-        'https://www.hackerearth.com/challenges/?filters=competitive%2Chackathon%2Chiring'
-      );
-      $ = cheerio.load(html.data);
-      $('.upcoming.challenge-list')
-        .find('a')
-        .each(async (i, el) => {
-          var link = $(el).attr('href');
-          if (link === undefined) return true;
-          if (link[0] === '/') {
-            link = 'https://www.hackerearth.com' + link;
-          }
-          const title = $(el)
-            .find('.challenge-name.ellipsis.dark')
-            .text()
-            .replace(/\s\s+/g, '');
-          const key = link.substr(39, 4);
-          var enddate = '';
-          var startdate = '';
-          var start = '';
-          let html1 = await axios.get(link);
-          let $1 = cheerio.load(html1.data);
-          var d = new Date();
-          var year = d.getFullYear();
-          if (key === 'comp' || key === 'hiri') {
-            const a = $1('.timing-text.dark.regular.weight-700');
-            const finaldate = $1(a[1])
-              .text()
-              .substr(0, 7)
-              .concat(year, $1(a[1]).text().substr(7));
-            const initialdate = $1(a[0])
-              .text()
-              .substr(0, 7)
-              .concat(year, $1(a[0]).text().substr(7));
-            const end = new Date(finaldate + '-1030');
-            start = new Date(initialdate + '-1030');
-            enddate = end.toUTCString().slice(0, -4).replace(/\s\s+/g, '');
-            startdate = start.toUTCString().slice(0, -4).replace(/\s\s+/g, '');
-          } else if (key === 'hack') {
-            const a = $1('.regular.bold.desc.dark');
-            const finaldate = $1(a[2]).text();
-            const initialdate = $1(a[1]).text();
-            const end = new Date(finaldate + '-1030');
-            start = new Date(initialdate + '-1030');
-            enddate = end.toUTCString().slice(0, -4).replace(/\s\s+/g, '');
-            startdate = start.toUTCString().slice(0, -4).replace(/\s\s+/g, '');
-          }
-          data.push({
-            id: uuid(),
-            platform: 'Hackerearth',
-            title: title,
-            date: startdate,
-            start: start,
-            end: enddate,
-            link: link,
-          });
-        });
-      return res.json(data);
-    } catch (err) {
-      return res.status(500).send('Server Error');
-    }
 
-    // console.log(data);
+    data.sort((a, b) => a.start.valueOf() - b.start.valueOf());  
+   return res.json(data);
+  //console.log(data);
   } catch (err) {
     return res.status(500).send('Server Error');
   }

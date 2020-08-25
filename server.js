@@ -15,6 +15,7 @@ app.use('/api/users', require('./routes/users'));
 app.use('/contests', require('./routes/chef'));
 app.use('/calendar', require('./routes/calendar'));
 app.use('/gauth', require('./routes/google'));
+app.use('/api/addcontest', require('./routes/addcontest'));
 
 //Serve static assets if in production
 if (process.env.NODE_ENV === 'production') {

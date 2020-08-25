@@ -18,7 +18,7 @@ const Home = (props) => {
     todayContest,
   } = contestContext;
   const authContext = useContext(AuthContext);
-  const { setgtoken, loadUser, user } = authContext;
+  const { setgtoken, loadUser, user, isAuthenticated } = authContext;
 
   useEffect(() => {
     getContests();
@@ -55,8 +55,16 @@ const Home = (props) => {
       <div className='text-center text-5xl font-mono font-bold mb-20'>
         Upcoming Contests
       </div>
-
       <div className='fixed-action-btn'>
+          <div>
+            <a 
+       className="btn-floating btn-large waves-effect waves-red blue modal-trigger"
+         href={isAuthenticated? ('#addcontest') : ('#logintoadd')}
+       >
+         <i className="material-icons">add</i>
+         </a>
+         <h6> </h6>
+          </div>
         <a
           className={
             todayContest
